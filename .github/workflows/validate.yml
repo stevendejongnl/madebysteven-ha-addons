@@ -1,0 +1,157 @@
+name: Validate addons
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  discover:
+    name: Discover addons
+    runs-on: ubuntu-latest
+    outputs:
+      addons: ${{ steps.find.outputs.addons }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find addons with a config.yaml
+        id: find
+        run: |
+          addons=$(find . -maxdepth 2 -name "config.yaml" -not -path "./.github/*" \
+            | sed 's|/config.yaml||' | sed 's|^\./||' | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "addons=$addons" >> "$GITHUB_OUTPUT"
+
+  # ── HA addon config validation ─────────────────────────────────────────────
+
+  addon-lint:
+    name: Addon lint — ${{ matrix.addon }}
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        addon: ${{ fromJson(needs.discover.outputs.addons) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run HA addon linter
+        uses: frenck/action-addon-linter@v2
+        with:
+          path: ./${{ matrix.addon }}
+
+  yamllint:
+    name: YAML lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run YAMLLint
+        uses: frenck/action-yamllint@v1
+
+  # ── Code quality ───────────────────────────────────────────────────────────
+
+  hadolint:
+    name: Dockerfile lint — ${{ matrix.addon }}
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        addon: ${{ fromJson(needs.discover.outputs.addons) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ${{ matrix.addon }}/Dockerfile
+
+  shellcheck:
+    name: ShellCheck — ${{ matrix.addon }}
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        addon: ${{ fromJson(needs.discover.outputs.addons) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ludeeus/action-shellcheck@2.0.0
+        with:
+          additional_files: ${{ matrix.addon }}/run.sh
+
+  backend:
+    name: Backend — ${{ matrix.addon }}
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        addon: ${{ fromJson(needs.discover.outputs.addons) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.addon }}/backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-caching: true
+      - name: Install dependencies
+        run: uv sync
+      - name: Lint (ruff)
+        run: uv run ruff check .
+      - name: Type check (mypy)
+        run: uv run mypy src
+      - name: Tests (pytest)
+        run: uv run pytest
+
+  frontend:
+    name: Frontend — ${{ matrix.addon }}
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        addon: ${{ fromJson(needs.discover.outputs.addons) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.addon }}/frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ matrix.addon }}/frontend/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint (eslint)
+        run: npm run lint
+      - name: Type check (tsc)
+        run: npm run typecheck
+      - name: Tests (vitest)
+        run: npm test
+
+  # ── HA build validation (main branch / PRs targeting main only) ────────────
+
+  ha-builder:
+    name: HA build — ${{ matrix.arch }} ${{ matrix.addon }}
+    needs: discover
+    runs-on: ${{ matrix.arch == 'aarch64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+    if: github.ref == 'refs/heads/main' || github.base_ref == 'main'
+    strategy:
+      fail-fast: false
+      matrix:
+        addon: ${{ fromJson(needs.discover.outputs.addons) }}
+        arch: [amd64, aarch64]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get addon info
+        id: info
+        uses: home-assistant/actions/helpers/info@master
+        with:
+          path: ./${{ matrix.addon }}
+      - name: Build with HA builder (test mode)
+        if: contains(steps.info.outputs.architectures, matrix.arch)
+        uses: home-assistant/builder@2026.02.1
+        with:
+          args: |
+            --test \
+            --${{ matrix.arch }} \
+            --target /data/${{ matrix.addon }} \
+            --addon
