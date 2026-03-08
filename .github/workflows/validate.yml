@@ -65,9 +65,9 @@ jobs:
         run: |
           docker run --rm \
             -v "$(pwd)/.hadolint.yaml:/.hadolint.yaml:ro" \
-            -i hadolint/hadolint \
-            --config /.hadolint.yaml - \
-            < ${{ matrix.addon }}/Dockerfile
+            -v "$(pwd)/${{ matrix.addon }}/Dockerfile:/Dockerfile:ro" \
+            hadolint/hadolint \
+            --config /.hadolint.yaml /Dockerfile
 
   shellcheck:
     name: ShellCheck
