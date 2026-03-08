@@ -61,27 +61,26 @@ jobs:
         addon: ${{ fromJson(needs.discover.outputs.addons) }}
     steps:
       - uses: actions/checkout@v4
-      - uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: ${{ matrix.addon }}/Dockerfile
-          config: .hadolint.yaml
+      - name: Run hadolint
+        run: |
+          docker run --rm \
+            -v "$(pwd)/.hadolint.yaml:/.hadolint.yaml:ro" \
+            -i hadolint/hadolint \
+            < ${{ matrix.addon }}/Dockerfile
 
   shellcheck:
-    name: ShellCheck — ${{ matrix.addon }}
-    needs: discover
+    name: ShellCheck
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        addon: ${{ fromJson(needs.discover.outputs.addons) }}
     steps:
       - uses: actions/checkout@v4
-      - uses: ludeeus/action-shellcheck@2.0.0
-        with:
-          additional_files: ${{ matrix.addon }}/run.sh
-          check_together: "yes"
-        env:
-          SHELLCHECK_OPTS: -x
+      - name: Run shellcheck
+        run: |
+          shellcheck -x \
+            scripts/shared.sh \
+            scripts/pre-commit \
+            scripts/pre-push \
+            scripts/install-hooks.sh \
+            picnic/run.sh
 
   backend:
     name: Backend — ${{ matrix.addon }}
