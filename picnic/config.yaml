@@ -14,11 +14,3 @@ ingress: true
 ingress_port: 8000
 map:
   - config:ro
-options:
-  picnic_username: ""
-  picnic_password: ""
-  picnic_country: "NL"
-schema:
-  picnic_username: str
-  picnic_password: str
-  picnic_country: str

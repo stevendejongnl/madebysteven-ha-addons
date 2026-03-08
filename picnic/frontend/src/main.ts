@@ -1,7 +1,5 @@
 import { initTheme } from './theme'
-import { api } from './api'
 
-import './pages/login-page'
 import './pages/swipe-page'
 import './pages/basket-page'
 import './pages/search-page'
@@ -54,39 +52,12 @@ document.head.appendChild(style)
 
 initTheme()
 
-async function boot() {
-  const appEl = document.getElementById('app')!
-  try {
-    const status = await api.getAuthStatus()
-    if (status.authenticated) {
-      startWithShell(appEl)
-    } else {
-      showLogin(appEl)
-    }
-  } catch {
-    startWithShell(appEl)
-  }
-}
-
-function startWithShell(appEl: HTMLElement) {
-  const shell = document.createElement('app-shell') as AppShell
-  shell.style.cssText = 'flex:1;min-height:0;'
-  appEl.appendChild(shell)
-  // Router outlet is the shell's slot host — we need an inner div
-  const outlet = document.createElement('div')
-  outlet.style.cssText = 'height:100%;display:flex;flex-direction:column;'
-  shell.appendChild(outlet)
-  router.outlet = outlet
-  router.start()
-}
-
-function showLogin(appEl: HTMLElement) {
-  const login = document.createElement('login-page')
-  appEl.appendChild(login)
-  login.addEventListener('authenticated', () => {
-    appEl.removeChild(login)
-    startWithShell(appEl)
-  })
-}
-
-boot()
+const appEl = document.getElementById('app')!
+const shell = document.createElement('app-shell') as AppShell
+shell.style.cssText = 'flex:1;min-height:0;'
+appEl.appendChild(shell)
+const outlet = document.createElement('div')
+outlet.style.cssText = 'height:100%;display:flex;flex-direction:column;'
+shell.appendChild(outlet)
+router.outlet = outlet
+router.start()

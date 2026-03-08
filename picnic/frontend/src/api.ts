@@ -1,4 +1,4 @@
-import type { AuthStatus, Basket, DeliveryInfo, Recipe, SearchResult } from './types'
+import type { Basket, DeliveryInfo, Recipe, SearchResult } from './types'
 import { BASE_PATH } from './router'
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -12,34 +12,6 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  getAuthStatus(): Promise<AuthStatus> {
-    return request('api/v1/auth/status')
-  },
-
-  login(): Promise<{ status: string; requires_2fa: boolean }> {
-    return request('api/v1/auth/login', { method: 'POST' })
-  },
-
-  send2FA(): Promise<{ status: string }> {
-    return request('api/v1/auth/2fa/send', { method: 'POST' })
-  },
-
-  verify2FA(otp: string): Promise<{ status: string }> {
-    return request('api/v1/auth/2fa/verify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ otp }),
-    })
-  },
-
-  setToken(token: string): Promise<{ status: string }> {
-    return request('api/v1/auth/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token }),
-    })
-  },
-
   getRecipes(offset = 0, limit = 20): Promise<Recipe[]> {
     return request(`api/v1/recipes?offset=${offset}&limit=${limit}`)
   },

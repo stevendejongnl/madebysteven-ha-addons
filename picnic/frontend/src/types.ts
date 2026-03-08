@@ -1,7 +1,3 @@
-export interface AuthStatus {
-  authenticated: boolean
-}
-
 export interface Ingredient {
   id: string
   name: string
