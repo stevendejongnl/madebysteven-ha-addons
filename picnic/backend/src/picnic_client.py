@@ -1,5 +1,6 @@
 """Singleton PicnicAPI client manager."""
 
+import contextlib
 import json
 import logging
 from pathlib import Path
@@ -9,6 +10,11 @@ from python_picnic_api2 import PicnicAPI
 logger = logging.getLogger(__name__)
 
 CACHE_FILE = Path("/data/picnic_auth.json")
+
+_HA_STORAGE_PATHS = [
+    "/homeassistant/.storage/core.config_entries",
+    "/config/.storage/core.config_entries",
+]
 
 
 def _load_cache() -> tuple[str, str] | None:
@@ -37,7 +43,7 @@ def _get_config_from_ha_storage() -> tuple[str, str] | None:
 
     Returns a (token, country_code) tuple, or None if not found.
     """
-    for path in ["/homeassistant/.storage/core.config_entries", "/config/.storage/core.config_entries"]:
+    for path in _HA_STORAGE_PATHS:
         try:
             with open(path) as f:
                 data = json.load(f)
@@ -47,7 +53,7 @@ def _get_config_from_ha_storage() -> tuple[str, str] | None:
                     token = entry_data.get("access_token")
                     country_code = entry_data.get("country_code", "NL")
                     if token:
-                        logger.info("Loaded Picnic config from HA integration (country: %s)", country_code)
+                        logger.info("Loaded Picnic config from HA (country: %s)", country_code)
                         return token, country_code
         except Exception as exc:
             logger.debug("Could not read HA storage at %s: %s", path, exc)
@@ -71,18 +77,18 @@ class PicnicClientManager:
                     _save_cache(*config)
             if config:
                 token, country_code = config
-                logger.info("Initializing Picnic client with stored token (country: %s)", country_code)
+                logger.info("Initializing Picnic client (country: %s)", country_code)
                 self._client = PicnicAPI(country_code=country_code, auth_token=token)
             else:
-                raise RuntimeError("Not authenticated. Ensure the HA Picnic integration is configured.")
+                raise RuntimeError(
+                    "Not authenticated. Ensure the HA Picnic integration is configured."
+                )
         return self._client
 
     def logout(self) -> None:
         self._client = None
-        try:
+        with contextlib.suppress(OSError):
             CACHE_FILE.unlink(missing_ok=True)
-        except OSError:
-            pass
 
 
 picnic_client_manager = PicnicClientManager()

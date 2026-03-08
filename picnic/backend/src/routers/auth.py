@@ -16,11 +16,13 @@ def get_client_manager() -> PicnicClientManager:
 
 
 @router.get("/status")
-async def auth_status(manager: PicnicClientManager = Depends(get_client_manager)) -> dict:
+async def auth_status(
+    manager: PicnicClientManager = Depends(get_client_manager),
+) -> dict[str, object]:
     return {"authenticated": manager.is_authenticated()}
 
 
 @router.post("/logout")
-async def logout(manager: PicnicClientManager = Depends(get_client_manager)) -> dict:
+async def logout(manager: PicnicClientManager = Depends(get_client_manager)) -> dict[str, object]:
     manager.logout()
     return {"status": "logged_out"}
