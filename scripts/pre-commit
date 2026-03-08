@@ -32,6 +32,12 @@ _fe_unit()    { cd "$ROOT/picnic/frontend"; npm test --silent; }
 _shellcheck() { shellcheck -x "$ROOT/scripts/shared.sh" "$ROOT/scripts/pre-commit" \
                   "$ROOT/scripts/pre-push" "$ROOT/scripts/install-hooks.sh" \
                   "$ROOT/picnic/run.sh"; }
+_hadolint()   { docker run --rm \
+                  --entrypoint /bin/hadolint \
+                  -v "$ROOT/.hadolint.yaml:/.hadolint.yaml:ro" \
+                  -v "$ROOT/picnic/Dockerfile:/Dockerfile:ro" \
+                  hadolint/hadolint \
+                  --config /.hadolint.yaml /Dockerfile; }
 
 run_parallel "Commit blocked" \
   "backend:lint"   _be_lint    \
@@ -40,6 +46,7 @@ run_parallel "Commit blocked" \
   "frontend:types" _fe_types   \
   "frontend:lint"  _fe_lint    \
   "frontend:unit"  _fe_unit    \
-  "shellcheck"     _shellcheck
+  "shellcheck"     _shellcheck \
+  "hadolint"       _hadolint
 
 echo "✅ All checks passed — committing."

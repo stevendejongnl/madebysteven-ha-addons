@@ -64,6 +64,7 @@ jobs:
       - name: Run hadolint
         run: |
           docker run --rm \
+            --entrypoint /bin/hadolint \
             -v "$(pwd)/.hadolint.yaml:/.hadolint.yaml:ro" \
             -v "$(pwd)/${{ matrix.addon }}/Dockerfile:/Dockerfile:ro" \
             hadolint/hadolint \

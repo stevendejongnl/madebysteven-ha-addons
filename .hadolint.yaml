@@ -1,5 +1,5 @@
 ---
-ignore:
+ignored:
   # HA addons use ARG BUILD_FROM before FROM by convention
   - DL3006
   # apk package versions are managed by the HA base image
