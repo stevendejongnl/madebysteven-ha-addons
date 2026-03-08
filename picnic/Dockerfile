@@ -1,7 +1,7 @@
 ARG BUILD_FROM
-FROM $BUILD_FROM
+FROM ${BUILD_FROM}
 
-# Install Python deps, Node, npm
+# Install Python, Node and npm
 RUN apk add --no-cache python3 py3-pip nodejs npm
 
 WORKDIR /app
@@ -13,15 +13,19 @@ RUN pip3 install --no-cache-dir --break-system-packages \
     "python-picnic-api2" \
     "fastapi" \
     "uvicorn[standard]" \
-    "pydantic-settings" \
     "aiofiles"
 
+# Install frontend dependencies
+COPY frontend/package.json frontend/package-lock.json frontend/
+WORKDIR /app/frontend
+RUN npm ci --prefer-offline
+
 # Build frontend
-COPY frontend/package.json frontend/
-RUN cd frontend && npm install --prefer-offline
-COPY frontend/src/ frontend/src/
-COPY frontend/index.html frontend/tsconfig.json frontend/vite.config.ts frontend/
-RUN cd frontend && npm run build
+COPY frontend/src/ src/
+COPY frontend/index.html frontend/tsconfig.json frontend/vite.config.ts ./
+RUN npm run build
+
+WORKDIR /app
 
 # Copy built frontend to backend static dir
 RUN cp -r frontend/dist backend/static

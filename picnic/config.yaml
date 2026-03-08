@@ -1,3 +1,4 @@
+---
 name: "Picnic Swipe"
 version: "1.0.0"
 slug: "picnic"
@@ -6,11 +7,7 @@ url: "https://github.com/stevendejongnl/madebysteven-ha-addons"
 arch:
   - amd64
   - aarch64
-  - armhf
-  - armv7
-startup: application
-boot: auto
 ingress: true
 ingress_port: 8000
 map:
-  - config:ro
+  - homeassistant_config:ro

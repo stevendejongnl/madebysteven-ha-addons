@@ -51,7 +51,7 @@ describe('router', () => {
   it('navigate to / shows swipe page title', async () => {
     const { router } = await import('./router')
     router.navigate('/')
-    expect(document.title).toContain('Recepten')
+    expect(document.title).toContain('Ontdekken')
   })
 })
 
