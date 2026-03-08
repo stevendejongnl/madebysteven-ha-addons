@@ -64,6 +64,7 @@ jobs:
       - uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: ${{ matrix.addon }}/Dockerfile
+          config: .hadolint.yaml
 
   shellcheck:
     name: ShellCheck — ${{ matrix.addon }}
