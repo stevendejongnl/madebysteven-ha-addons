@@ -1,0 +1,24 @@
+name: "Picnic Swipe"
+version: "1.0.0"
+slug: "picnic"
+description: "Swipe Picnic products into your basket"
+url: "https://github.com/stevendejongnl/madebysteven-ha-addons"
+arch:
+  - amd64
+  - aarch64
+  - armhf
+  - armv7
+startup: application
+boot: auto
+ingress: true
+ingress_port: 8000
+map:
+  - config:ro
+options:
+  picnic_username: ""
+  picnic_password: ""
+  picnic_country: "NL"
+schema:
+  picnic_username: str
+  picnic_password: str
+  picnic_country: str
