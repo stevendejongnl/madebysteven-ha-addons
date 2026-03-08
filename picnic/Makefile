@@ -1,4 +1,7 @@
-.PHONY: start stop logs build test lint typecheck
+.PHONY: start stop logs build test lint typecheck hooks
+
+hooks:
+	bash ../scripts/install-hooks.sh
 
 start:
 	docker compose up -d
