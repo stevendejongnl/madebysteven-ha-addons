@@ -1,0 +1,8 @@
+---
+ignore:
+  # HA addons use ARG BUILD_FROM before FROM by convention
+  - DL3006
+  # apk package versions are managed by the HA base image
+  - DL3018
+  # pip versions are pinned via pyproject.toml, not inline
+  - DL3013
