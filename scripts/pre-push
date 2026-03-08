@@ -2,7 +2,7 @@
 # Pre-push: lint + typecheck + unit tests (all parallel).
 set -euo pipefail
 
-# shellcheck source=shared.sh
+# shellcheck source=scripts/shared.sh
 source "$(dirname "$0")/shared.sh"
 
 echo "🔍 Pre-push checks..."
@@ -23,19 +23,23 @@ if git rev-parse --verify "$REMOTE_BRANCH" >/dev/null 2>&1; then
   fi
 fi
 
-_be_lint()  { cd "$ROOT/picnic/backend";  uv run ruff check .; }
-_be_mypy()  { cd "$ROOT/picnic/backend";  uv run mypy src; }
-_be_tests() { cd "$ROOT/picnic/backend";  uv run pytest -q --tb=short; }
-_fe_types() { cd "$ROOT/picnic/frontend"; npm run typecheck --silent; }
-_fe_lint()  { cd "$ROOT/picnic/frontend"; npm run lint --silent; }
-_fe_unit()  { cd "$ROOT/picnic/frontend"; npm test --silent; }
+_be_lint()    { cd "$ROOT/picnic/backend";  uv run ruff check .; }
+_be_mypy()    { cd "$ROOT/picnic/backend";  uv run mypy src; }
+_be_tests()   { cd "$ROOT/picnic/backend";  uv run pytest -q --tb=short; }
+_fe_types()   { cd "$ROOT/picnic/frontend"; npm run typecheck --silent; }
+_fe_lint()    { cd "$ROOT/picnic/frontend"; npm run lint --silent; }
+_fe_unit()    { cd "$ROOT/picnic/frontend"; npm test --silent; }
+_shellcheck() { shellcheck -x "$ROOT/scripts/shared.sh" "$ROOT/scripts/pre-commit" \
+                  "$ROOT/scripts/pre-push" "$ROOT/scripts/install-hooks.sh" \
+                  "$ROOT/picnic/run.sh"; }
 
 run_parallel "Push blocked" \
-  "backend:lint"   _be_lint  \
-  "backend:mypy"   _be_mypy  \
-  "backend:tests"  _be_tests \
-  "frontend:types" _fe_types \
-  "frontend:lint"  _fe_lint  \
-  "frontend:unit"  _fe_unit
+  "backend:lint"   _be_lint    \
+  "backend:mypy"   _be_mypy    \
+  "backend:tests"  _be_tests   \
+  "frontend:types" _fe_types   \
+  "frontend:lint"  _fe_lint    \
+  "frontend:unit"  _fe_unit    \
+  "shellcheck"     _shellcheck
 
 echo "✅ All checks passed — pushing."

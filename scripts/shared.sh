@@ -3,6 +3,7 @@
 # Do not run directly.
 
 ROOT="$(git rev-parse --show-toplevel)"
+export ROOT
 
 # ANSI colours — only when stdout is a real terminal; empty strings otherwise
 # so captured output (pipes, files, CI logs) stays plain text.
@@ -50,7 +51,7 @@ run_parallel() {
       for ((i=0; i<n; i++)); do
         if kill -0 "${pids[$i]}" 2>/dev/null; then
           any_running=true
-          line+="  ${frames[$((frame % 10))]} ${names[$i]}"
+          line+="  ${frames[$(( frame % 10 ))]} ${names[i]}"
         else
           line+="  · ${names[$i]}"
         fi
@@ -66,7 +67,7 @@ run_parallel() {
   # Collect results and print summary
   local any_failed=false
   for ((i=0; i<n; i++)); do
-    wait "${pids[$i]}" || exits[$i]=$?
+    wait "${pids[$i]}" || exits[i]=$?
     if [[ ${exits[$i]} -eq 0 ]]; then
       printf "  ${_GRN}✓${_RST} %s\n" "${names[$i]}"
     else

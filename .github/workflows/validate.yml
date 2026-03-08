@@ -133,10 +133,10 @@ jobs:
 
   # ── HA build validation (main branch / PRs targeting main only) ────────────
 
-  ha-builder:
-    name: HA build — ${{ matrix.arch }} ${{ matrix.addon }}
+  docker-build:
+    name: Docker build — ${{ matrix.addon }}
     needs: discover
-    runs-on: ${{ matrix.arch == 'aarch64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+    runs-on: ubuntu-latest
     if: >
       github.ref == 'refs/heads/main' ||
       github.base_ref == 'main'
@@ -144,20 +144,14 @@ jobs:
       fail-fast: false
       matrix:
         addon: ${{ fromJson(needs.discover.outputs.addons) }}
-        arch: [amd64, aarch64]
     steps:
       - uses: actions/checkout@v4
-      - name: Get addon info
-        id: info
-        uses: home-assistant/actions/helpers/info@master
+      - uses: docker/setup-buildx-action@v3
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
         with:
-          path: ./${{ matrix.addon }}
-      - name: Build with HA builder (test mode)
-        if: contains(steps.info.outputs.architectures, matrix.arch)
-        uses: home-assistant/builder@2026.02.1
-        with:
-          args: >
-            --test
-            --${{ matrix.arch }}
-            --target /data/${{ matrix.addon }}
-            --addon
+          context: ./${{ matrix.addon }}
+          push: false
+          build-args: BUILD_FROM=ghcr.io/home-assistant/amd64-base:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
