@@ -1,6 +1,6 @@
 ---
 name: "Dude, Where's My Package?"
-version: "1.0.2"
+version: "1.0.3"
 slug: "dwmp"
 description: "Track packages from PostNL, DHL, DPD, GLS, and Amazon NL"
 url: "https://github.com/stevendejongnl/dude-wheres-my-package"
