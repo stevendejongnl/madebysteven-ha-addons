@@ -12,10 +12,8 @@ panel_icon: mdi:package-variant-closed
 panel_title: "Packages"
 init: false
 options:
-  password: ""
   poll_interval_minutes: 30
   timezone: "Europe/Amsterdam"
 schema:
-  password: "password?"
   poll_interval_minutes: "int(5,1440)"
   timezone: "str"

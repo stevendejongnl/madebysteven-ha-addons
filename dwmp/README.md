@@ -15,26 +15,27 @@ through HA ingress so it shows up in the sidebar.
 1. Add this repo (`Settings → Add-ons → Add-on Store → ⋮ → Repositories`):
    `https://github.com/stevendejongnl/madebysteven-ha-addons`
 2. Install **Dude, Where's My Package?**
-3. Set a `password` in the addon configuration (recommended).
-4. Start the addon. Open it from the sidebar.
+3. Start the addon. Open it from the sidebar.
 
 ## Options
 
 | Option | Default | Description |
 |---|---|---|
-| `password` | _(empty)_ | Login password for the web UI. Empty = open access (no auth). |
 | `poll_interval_minutes` | `30` | How often the background scheduler refreshes parcels. 5–1440. |
 | `timezone` | `Europe/Amsterdam` | Used by the scheduler for time-of-day display. |
 
-The password is hashed with argon2 inside the addon — the plaintext never leaves
-`/data/options.json`. The hash and the JWT signing secret are persisted to `/data`
-so login sessions and the auth cookie survive restarts.
+## Authentication
+
+The addon has no login of its own — auth is handled by Home Assistant. The
+container only exposes its web UI through HA ingress, and reaching an ingress
+URL already requires a logged-in HA user, so anyone who can open the addon
+from the sidebar is authenticated by HA.
 
 ## Pair with the HA integration
 
 The companion HA custom component reads parcels into HA sensors:
 [`stevens-home-assistant-integrations/custom_components/dwmp`](https://github.com/stevendejongnl/stevens-home-assistant-integrations/tree/main/custom_components/dwmp).
-Point it at the addon's ingress URL and the password you set above.
+Point it at the addon's ingress URL.
 
 ## Carrier setup
 
