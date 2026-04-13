@@ -10,3 +10,7 @@ dist/
 .env
 .DS_Store
 *.swp
+
+# Local-only
+.claude/
+.ha-test-ip

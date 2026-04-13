@@ -1,0 +1,6 @@
+{
+  "name": "picnic",
+  "version": "0.0.0-managed-by-semantic-release",
+  "private": true,
+  "description": "semantic-release-monorepo reads `name` from this file to scope tags as `picnic-v<version>`. The addon itself is Python + Lit — see config.yaml for the version users see in Home Assistant."
+}
