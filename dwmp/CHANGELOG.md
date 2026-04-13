@@ -1,5 +1,11 @@
 # Dude, Where's My Package? — Changelog
 
+## [dwmp-v1.0.2](https://github.com/stevendejongnl/madebysteven-ha-addons/compare/dwmp-v1.0.1...dwmp-v1.0.2) (2026-04-13)
+
+### Bug Fixes
+
+* **dwmp:** bump upstream pin to 1.17.1 for StaticFiles mount fix ([73cf150](https://github.com/stevendejongnl/madebysteven-ha-addons/commit/73cf150b183c598e1596f30b50c76d3b9071a4e6))
+
 ## [dwmp-v1.0.1](https://github.com/stevendejongnl/madebysteven-ha-addons/compare/dwmp-v1.0.0...dwmp-v1.0.1) (2026-04-13)
 
 ### Bug Fixes
