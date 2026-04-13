@@ -14,3 +14,11 @@ dist/
 # Local-only
 .claude/
 .ha-test-ip
+.playwright-mcp/
+*.jpg
+*.png
+!**/icon.png
+!**/icon@2x.png
+!**/apple-touch-icon.png
+!**/favicon-32.png
+!**/icon-64.png
