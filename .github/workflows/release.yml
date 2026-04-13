@@ -1,13 +1,15 @@
+---
 name: Release
 
-on:
+"on":
   push:
     branches: [main]
   workflow_dispatch:
 
-# Sequential jobs (needs:) so each release sees the previous one's commits + tags.
-# Order: addons first (they bump their own config.yaml versions), root last
-# (so the GitHub release tarball contains the bumped addon manifests).
+# Sequential jobs (needs:) so each release sees the previous run's
+# commits and tags. Order: addons first (they bump their own config.yaml
+# versions), root last (so the GitHub release tarball contains the
+# bumped addon manifests).
 
 jobs:
   release-picnic:
