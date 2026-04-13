@@ -1,5 +1,19 @@
 # Dude, Where's My Package? — Changelog
 
+## [dwmp-v2.0.0](https://github.com/stevendejongnl/madebysteven-ha-addons/compare/dwmp-v1.1.0...dwmp-v2.0.0) (2026-04-13)
+
+### ⚠ BREAKING CHANGES
+
+* **dwmp:** the `password` addon option has been removed. The addon now
+delegates authentication to Home Assistant's ingress — anyone reaching the
+sidebar is already an authenticated HA user. Any value previously set for
+`password` in options.json is ignored; the stale argon2 hash cache at
+/data/pw.hash is cleaned up on first run.
+
+### Features
+
+* **dwmp:** remove password option, rely on HA ingress for auth ([dd96460](https://github.com/stevendejongnl/madebysteven-ha-addons/commit/dd96460e89a24ba431b21c39e17b55ef66365e38))
+
 ## [dwmp-v1.1.0](https://github.com/stevendejongnl/madebysteven-ha-addons/compare/dwmp-v1.0.4...dwmp-v1.1.0) (2026-04-13)
 
 ### Features
