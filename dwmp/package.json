@@ -1,0 +1,6 @@
+{
+  "name": "dwmp",
+  "version": "0.0.0-managed-by-semantic-release",
+  "private": true,
+  "description": "semantic-release-monorepo reads `name` from this file to scope tags as `dwmp-v<version>`. The addon itself wraps the upstream dude-wheres-my-package image — see config.yaml for the version users see in Home Assistant."
+}

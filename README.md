@@ -12,3 +12,9 @@ A collection of custom Home Assistant addons.
 
 ### Picnic Swipe
 Integrates the Picnic grocery delivery app with a swipe UI to add products to your basket.
+
+### Dude, Where's My Package?
+Track packages from PostNL, DHL, DPD, GLS, and Amazon NL. Wraps the upstream
+[`dude-wheres-my-package`](https://github.com/stevendejongnl/dude-wheres-my-package)
+service. Pairs with the [`dwmp`](https://github.com/stevendejongnl/stevens-home-assistant-integrations/tree/main/custom_components/dwmp)
+HA custom component for sensors. amd64 only.

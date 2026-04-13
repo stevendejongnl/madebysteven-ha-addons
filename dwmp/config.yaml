@@ -1,0 +1,21 @@
+---
+name: "Dude, Where's My Package?"
+version: "1.0.0"
+slug: "dwmp"
+description: "Track packages from PostNL, DHL, DPD, GLS, and Amazon NL"
+url: "https://github.com/stevendejongnl/dude-wheres-my-package"
+arch:
+  - amd64
+ingress: true
+ingress_port: 8000
+panel_icon: mdi:package-variant-closed
+panel_title: "Packages"
+init: false
+options:
+  password: ""
+  poll_interval_minutes: 30
+  timezone: "Europe/Amsterdam"
+schema:
+  password: "password?"
+  poll_interval_minutes: "int(5,1440)"
+  timezone: "str"
