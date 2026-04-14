@@ -8,6 +8,8 @@ read_opt() {
   /app/.venv/bin/python -c "import json; print(json.load(open('${OPTS}')).get('$1', '$2'))"
 }
 
+DHL_API_KEY=$(read_opt dhl_api_key "")
+DWMP_PUBLIC_URL=$(read_opt dwmp_public_url "")
 POLL_INTERVAL=$(read_opt poll_interval_minutes 30)
 TZ_OPT=$(read_opt timezone "Europe/Amsterdam")
 
@@ -24,6 +26,8 @@ JWT_SECRET=$(cat /data/jwt_secret)
 # carry forward dead state on disk.
 rm -f /data/pw.hash
 
+export DHL_API_KEY
+export DWMP_PUBLIC_URL
 export JWT_SECRET
 export POLL_INTERVAL_MINUTES="${POLL_INTERVAL}"
 export TZ="${TZ_OPT}"

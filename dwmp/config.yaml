@@ -12,8 +12,12 @@ panel_icon: mdi:package-variant-closed
 panel_title: "Packages"
 init: false
 options:
+  dhl_api_key: ""
+  dwmp_public_url: ""
   poll_interval_minutes: 30
   timezone: "Europe/Amsterdam"
 schema:
+  dhl_api_key: "str?"
+  dwmp_public_url: "url?"
   poll_interval_minutes: "int(5,1440)"
   timezone: "str"
