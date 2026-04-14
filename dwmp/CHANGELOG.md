@@ -1,5 +1,11 @@
 # Dude, Where's My Package? — Changelog
 
+## [dwmp-v2.14.2](https://github.com/stevendejongnl/madebysteven-ha-addons/compare/dwmp-v2.14.1...dwmp-v2.14.2) (2026-04-14)
+
+### Bug Fixes
+
+* **dwmp:** bump upstream image to v1.31.5 ([#28](https://github.com/stevendejongnl/madebysteven-ha-addons/issues/28)) ([c74920c](https://github.com/stevendejongnl/madebysteven-ha-addons/commit/c74920c8f97f9d11a6545cb72f94605fe1d15488))
+
 ## [dwmp-v2.14.1](https://github.com/stevendejongnl/madebysteven-ha-addons/compare/dwmp-v2.14.0...dwmp-v2.14.1) (2026-04-14)
 
 ### Bug Fixes
