@@ -1,5 +1,11 @@
 # Dude, Where's My Package? — Changelog
 
+## [dwmp-v2.14.0](https://github.com/stevendejongnl/madebysteven-ha-addons/compare/dwmp-v2.13.3...dwmp-v2.14.0) (2026-04-14)
+
+### Features
+
+* **dwmp:** add dwmp_public_url option for browser-push bookmarklet ([5a97b4b](https://github.com/stevendejongnl/madebysteven-ha-addons/commit/5a97b4b570f02f0aab23d9e9aa04d4d72087296a))
+
 ## [dwmp-v2.13.3](https://github.com/stevendejongnl/madebysteven-ha-addons/compare/dwmp-v2.13.2...dwmp-v2.13.3) (2026-04-14)
 
 ### Bug Fixes
