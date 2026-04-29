@@ -3,7 +3,7 @@
 # runtime that dwmp ships with. Trade-off: addon is amd64-only (matches upstream).
 # 1.16.0+ honors X-Ingress-Path so HA's sidebar / ingress redirects work correctly.
 ARG BUILD_FROM
-FROM ghcr.io/stevendejongnl/dude-wheres-my-package:1.46.3
+FROM ghcr.io/stevendejongnl/dude-wheres-my-package:1.47.0
 
 # Surface the HA base image in metadata even though we don't FROM it.
 ARG BUILD_FROM
